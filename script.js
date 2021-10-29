@@ -3,23 +3,26 @@ const carousel = document.getElementById("carousel");
 window.onload = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const searchQuery = urlParams.get("searchQuery");
-  document.title = `searching "${searchQuery}" - MOVIE.ID`;
   if (searchQuery !== null) {
-    document.getElementById("sub-menu").innerHTML = `
-    <h2>SEARCHING "${searchQuery.toUpperCase()}"</h2>
-    `;
+    document.title = `searching "${searchQuery}" - MOVIE.ID`;
     let apiUrl = `http://www.omdbapi.com/?apikey=1bee8ffd&s=${searchQuery}`;
     fetch(apiUrl)
       .then((response) => {
         return response.json();
       })
       .then((result) => {
-        if (result.Response) {
+        console.log(result);
+        if (result.Response == "True") {
+          document.getElementById("sub-menu").innerHTML = `
+          <h2>SEARCHING "${searchQuery.toUpperCase()}"</h2>
+          `;
           result.Search.map((element) => {
             addMovieToList(element);
           });
         } else {
-          console.log("movie not found");
+          document.getElementById("sub-menu").innerHTML = `
+          <h2>"${searchQuery.toUpperCase()}" NOT FOUND</h2>
+          `;
         }
       })
       .catch((err) => {
